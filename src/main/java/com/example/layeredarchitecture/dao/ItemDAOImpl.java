@@ -70,4 +70,19 @@ public class ItemDAOImpl implements ItemDAO {
             return "I00-001";
         }
     }
+
+    @Override
+    public ArrayList<ItemDTO> findItems(String newItemCode) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+        pstm.setString(1, newItemCode + "");
+        ResultSet rst = pstm.executeQuery();
+        ArrayList<ItemDTO> items = new ArrayList<>();
+
+        while (rst.next()) {
+            ItemDTO itemDTO = new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+            items.add(itemDTO);
+        }
+        return items;
+    }
 }
