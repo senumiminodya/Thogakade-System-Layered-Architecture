@@ -72,4 +72,18 @@ public class CustomerDAOImpl implements CustomerDAO{
         return pstm.executeUpdate();
     }
 
+    @Override
+    public ArrayList<CustomerDTO> searchCustomer(String newValue) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
+        pstm.setString(1, newValue + "");
+        ResultSet rst = pstm.executeQuery();
+        ArrayList<CustomerDTO> searchCustomer = new ArrayList<>();
+        while (rst.next()) {
+            CustomerDTO customerDTO = new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
+            searchCustomer.add(customerDTO);
+        }
+        return searchCustomer;
+    }
+
 }
