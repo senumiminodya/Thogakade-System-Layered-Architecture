@@ -11,10 +11,10 @@ public class ItemDAOImpl implements ItemDAO {
     public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         Statement stm = connection.createStatement();
-        ArrayList<ItemDTO> getAllItem = new ArrayList<>();
         ResultSet rst = stm.executeQuery("SELECT * FROM Item");
+        ArrayList<ItemDTO> getAllItem=new ArrayList<>();
         while (rst.next()) {
-            ItemDTO itemDTO = new ItemDTO(rst.getString("id"), rst.getString("name"), rst.getString("price"));
+            ItemDTO itemDTO=new ItemDTO(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4));
             getAllItem.add(itemDTO);
         }
         return getAllItem;
