@@ -14,7 +14,7 @@ public class ItemDAOImpl implements ItemDAO {
         ResultSet rst = stm.executeQuery("SELECT * FROM Item");
         ArrayList<ItemDTO> getAllItem=new ArrayList<>();
         while (rst.next()) {
-            ItemDTO itemDTO=new ItemDTO(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4));
+            ItemDTO itemDTO=new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unitPrice"),rst.getInt("qtyOnHand"));
             getAllItem.add(itemDTO);
         }
         return getAllItem;
