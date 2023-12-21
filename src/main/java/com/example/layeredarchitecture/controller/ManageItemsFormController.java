@@ -1,11 +1,8 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.dao.CustomerDAOImpl;
-import com.example.layeredarchitecture.dao.ItemDAOImpl;
-import com.example.layeredarchitecture.db.DBConnection;
-import com.example.layeredarchitecture.model.CustomerDTO;
+import com.example.layeredarchitecture.dao.custom.ItemDAO;
+import com.example.layeredarchitecture.dao.custom.impl.ItemDAOImpl;
 import com.example.layeredarchitecture.model.ItemDTO;
-import com.example.layeredarchitecture.view.tdm.CustomerTM;
 import com.example.layeredarchitecture.view.tdm.ItemTM;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -73,8 +70,8 @@ public class ManageItemsFormController {
     private void loadAllItems() {
         tblItems.getItems().clear();
         try {
-            ItemDAOImpl itemDAO = new ItemDAOImpl();
-            ArrayList<ItemDTO> allItems = itemDAO.getAllItems();
+            ItemDAO itemDAO = new ItemDAOImpl();
+            ArrayList<ItemDTO> allItems = itemDAO.getAll();
             for(ItemDTO i: allItems) {
                 tblItems.getItems().add(new ItemTM(i.getCode(), i.getDescription(), i.getUnitPrice(), i.getQtyOnHand()));
             }
@@ -147,7 +144,7 @@ public class ManageItemsFormController {
             pstm.executeUpdate();*/
 
             ItemDAOImpl itemDAO = new ItemDAOImpl();
-            itemDAO.deleteItem(code);
+            itemDAO.delete(code);
 
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
             tblItems.getSelectionModel().clearSelection();
@@ -194,7 +191,7 @@ public class ManageItemsFormController {
                 pstm.setBigDecimal(3, unitPrice);
                 pstm.setInt(4, qtyOnHand);
                 pstm.executeUpdate();*/
-                new ItemDAOImpl().saveItem(new ItemDTO(code, description, unitPrice, qtyOnHand));
+                new ItemDAOImpl().save(new ItemDTO(code, description, unitPrice, qtyOnHand));
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
             } catch (SQLException e) {
@@ -216,7 +213,7 @@ public class ManageItemsFormController {
                 pstm.setInt(3, qtyOnHand);
                 pstm.setString(4, code);
                 pstm.executeUpdate();*/
-                new ItemDAOImpl().updateItem(new ItemDTO(code, description, unitPrice, qtyOnHand));
+                new ItemDAOImpl().update(new ItemDTO(code, description, unitPrice, qtyOnHand));
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
                 selectedItem.setDescription(description);
@@ -239,7 +236,7 @@ public class ManageItemsFormController {
         PreparedStatement pstm = connection.prepareStatement("SELECT code FROM Item WHERE code=?");
         pstm.setString(1, code);
         return pstm.executeQuery().next();*/
-        return new ItemDAOImpl().existItem(code);
+        return new ItemDAOImpl().exist(code);
     }
 
 

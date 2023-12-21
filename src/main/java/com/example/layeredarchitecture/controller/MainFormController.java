@@ -1,5 +1,8 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.dao.custom.QueryDAO;
+import com.example.layeredarchitecture.dao.custom.impl.QueryDAOImpl;
+import com.example.layeredarchitecture.model.QueryDTO;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -7,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
@@ -18,6 +22,8 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -36,6 +42,8 @@ public class MainFormController {
     private Label lblMenu;
     @FXML
     private Label lblDescription;
+
+    QueryDAO queryDAO = new QueryDAOImpl();
 
 
     /**
@@ -120,6 +128,16 @@ public class MainFormController {
                     root = FXMLLoader.load(this.getClass().getResource("/com/example/layeredarchitecture/place-order-form.fxml"));
                     break;
                 case "imgViewOrders":
+                    try {
+                        ArrayList<QueryDTO> query = queryDAO.query();
+                        for (QueryDTO q: query) {
+                            System.out.println(q);
+                        }
+                    } catch (SQLException e) {
+                        new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+                    } catch (ClassNotFoundException e) {
+                        new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+                    }
                     root = null;
                     break;
             }

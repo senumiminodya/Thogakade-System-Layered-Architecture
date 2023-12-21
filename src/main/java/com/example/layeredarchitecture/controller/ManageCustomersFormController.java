@@ -1,8 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.dao.CustomerDAO;
-import com.example.layeredarchitecture.dao.CustomerDAOImpl;
-import com.example.layeredarchitecture.db.DBConnection;
+import com.example.layeredarchitecture.dao.custom.CustomerDAO;
+import com.example.layeredarchitecture.dao.custom.impl.CustomerDAOImpl;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.view.tdm.CustomerTM;
 import com.jfoenix.controls.JFXButton;
@@ -72,7 +71,7 @@ public class ManageCustomersFormController {
         tblCustomers.getItems().clear();
         /*Get all customers*/
         try {
-            ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
+            ArrayList<CustomerDTO> allCustomers = customerDAO.getAll();
             for(CustomerDTO c: allCustomers) {
                 tblCustomers.getItems().add(new CustomerTM(c.getId(), c.getName(), c.getAddress()));
             }
@@ -159,7 +158,7 @@ public class ManageCustomersFormController {
                 pstm.setString(3, address);
                 pstm.executeUpdate();*/
 
-                boolean isSaved = customerDAO.saveCustomer(new CustomerDTO(id, name, address));
+                boolean isSaved = customerDAO.save(new CustomerDTO(id, name, address));
                 if (isSaved) {
                     tblCustomers.getItems().add(new CustomerTM(id, name, address));
                 }
@@ -178,7 +177,7 @@ public class ManageCustomersFormController {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
 
-                customerDAO.updateCustomer(new CustomerDTO(id, name, address));
+                customerDAO.update(new CustomerDTO(id, name, address));
                 /*Connection connection = DBConnection.getDbConnection().getConnection();
                 PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
                 pstm.setString(1, name);
@@ -209,7 +208,7 @@ public class ManageCustomersFormController {
         PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
         pstm.setString(1, id);
         return pstm.executeQuery().next();*/
-        return customerDAO.existCustomer(id);
+        return customerDAO.exist(id);
     }
 
 
@@ -225,7 +224,7 @@ public class ManageCustomersFormController {
             pstm.setString(1, id);
             pstm.executeUpdate();*/
 
-            customerDAO.deleteCustomer(id);
+            customerDAO.delete(id);
 
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
